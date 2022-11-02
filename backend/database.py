@@ -6,7 +6,7 @@ DATA_BASE_NAME = "NSE.db"
 
 TABLE_NAME = "NSE"
 
-SQLALCHEMY_DATABASE_URL = f"sqlite:///./{DATA_BASE_NAME}"
+SQLALCHEMY_DATABASE_URL = f"sqlite:///../{DATA_BASE_NAME}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

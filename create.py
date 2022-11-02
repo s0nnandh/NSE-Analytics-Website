@@ -12,7 +12,7 @@ c = conn.cursor()
 c.execute("DROP TABLE IF EXISTS NSE")
 
 # create table 
-c.execute('''CREATE TABLE NSE (SYMBOL TEXT,SERIES TEXT,OPEN REAL,HIGH REAL,LOW REAL,CLOSE REAL,LAST REAL,PREVCLOSE REAL,TOTTRDQTY REAL,TOTTRDVAL REAL,TIMESTAMP TEXT,TOTALTRADES REAL,ISIN TEXT)''')
+c.execute('''CREATE TABLE NSE (SYMBOL TEXT,OPEN REAL,HIGH REAL,LOW REAL,CLOSE REAL,LAST REAL,PREVCLOSE REAL,TOTTRDQTY REAL,TOTTRDVAL REAL,TIMESTAMP DATETIME,TOTALTRADES REAL,ISIN TEXT)''')
 
 Max_Dates = 20
 
@@ -27,6 +27,8 @@ os.chdir(cwd + '/NSE-Data')
 
 for days in range(Max_Dates):
     date = datetime.date.today() - datetime.timedelta(days=days)
+
+    print("Date : ", date)
     
     month = date.strftime("%B")[:3].upper()
 
@@ -56,12 +58,14 @@ for days in range(Max_Dates):
         # read csv file and create a list of tuples
         with open(f"cm{full_date}bhav.csv", 'r') as f:
             next(f)
-            data = [list(line) for line in csv.reader(f)]
+            data = [list(line)[:-1] for line in csv.reader(f)]
             # filter rows whose second index is EQ
             data = [row for row in data if row.pop(1) == 'EQ']
+            for row in data:
+                row[9] = datetime.datetime.strptime(row[9], '%d-%b-%Y').strftime('%Y-%m-%d')
             print(data[0])
             # add data to database
-            c.executemany("INSERT INTO NSE VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", data)
+            c.executemany("INSERT INTO NSE VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", data)
             # commit changes
             conn.commit()
     print(url)
