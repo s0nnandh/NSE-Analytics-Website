@@ -1,13 +1,13 @@
 from sqlalchemy.orm import validates
 from sqlalchemy import Column, Integer, String, DateTime, Float
 from sqlalchemy.types import Date
-import database
+from database import Base
 
 # change string to datetime
 
 
 # create model for the database
-class NSE(database.Base):
+class NSE(Base):
     __tablename__ = "NSE"
     id = Column("SYMBOL", String, primary_key=True, index=True)
     open = Column("OPEN", Float)
