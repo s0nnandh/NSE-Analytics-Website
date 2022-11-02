@@ -1,3 +1,4 @@
+import csv
 import datetime
 import os
 import wget
@@ -7,8 +8,11 @@ import sqlite3
 conn = sqlite3.connect('NSE.db')
 c = conn.cursor()
 
+## drop all tables
+c.execute("DROP TABLE IF EXISTS NSE")
+
 # create table 
-c.execute('''CREATE TABLE IF NOT EXISTS NSE (SYMBOL TEXT,SERIES TEXT,OPEN REAL,HIGH REAL,LOW REAL,CLOSE REAL,LAST REAL,PREVCLOSE REAL,TOTTRDQTY REAL,TOTTRDVAL REAL,TIMESTAMP TEXT,TOTALTRADES REAL,ISIN TEXT)''')
+c.execute('''CREATE TABLE NSE (SYMBOL TEXT,SERIES TEXT,OPEN REAL,HIGH REAL,LOW REAL,CLOSE REAL,LAST REAL,PREVCLOSE REAL,TOTTRDQTY REAL,TOTTRDVAL REAL,TIMESTAMP TEXT,TOTALTRADES REAL,ISIN TEXT)''')
 
 Max_Dates = 20
 
@@ -47,15 +51,24 @@ for days in range(Max_Dates):
         os.system(f"rm cm{full_date}bhav.csv.zip")
 
     
-    # insert data
+    # if file exists
     if os.path.exists(f"cm{full_date}bhav.csv"):
+        # read csv file and create a list of tuples
         with open(f"cm{full_date}bhav.csv", 'r') as f:
             next(f)
-            # print([tuple(line) for line in (l.strip().split(",") for l in f)])
-            c.executemany("INSERT INTO NSE VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", [tuple(line) for line in (l.strip().split(",")[:-1] for l in f)])
+            data = [list(line) for line in csv.reader(f)]
+            # filter rows whose second index is EQ
+            data = [row for row in data if row.pop(1) == 'EQ']
+            print(data[0])
+            # add data to database
+            c.executemany("INSERT INTO NSE VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", data)
+            # commit changes
             conn.commit()
-
     print(url)
 
+# print total count of rows
+print(c.execute("SELECT COUNT(*) FROM NSE").fetchall())
+
 conn.commit()
+conn.close()
 
