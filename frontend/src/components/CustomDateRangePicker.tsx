@@ -7,7 +7,12 @@ import 'react-date-range-ts/dist/styles.css'
 import 'react-date-range-ts/dist/theme/default.css'
 import { BiChevronDown } from 'react-icons/bi'
 
-export const CustomDateRangePicker = () => {
+interface CustomDateRangePickerProps {
+    setStartDate: (date: Date) => void
+    setEndDate: (date: Date) => void
+}
+
+export const CustomDateRangePicker = (props : CustomDateRangePickerProps) => {
 
   const [range, setRange] = useState([
     {
@@ -42,6 +47,8 @@ export const CustomDateRangePicker = () => {
                 endDate: endDate > new Date() ? new Date() : endDate,
                 key: 'selection'
               }])
+              props.setStartDate(startDate)
+              props.setEndDate(endDate > new Date() ? new Date() : endDate)
               setSelected(true)
             }}
             disabledDay={(date) => date >= new Date()}

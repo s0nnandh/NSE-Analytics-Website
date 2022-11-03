@@ -12,3 +12,5 @@ class StockDataService {
         return http.post<Array<Stock>>("/price", data);
     }    
 }
+
+export default new StockDataService();

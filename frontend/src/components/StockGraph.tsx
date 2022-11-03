@@ -2,46 +2,75 @@ import { useEffect, useState } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import { CustomDateRangePicker } from "./CustomDateRangePicker";
+import { Audio } from 'react-loader-spinner'
+import StockDataService from "../service/StockService";
+import { StockID } from "../types/StockID";
 
 
 export const StockGraph = () => {
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    
+    const [error, setError] = useState({
+        isError: true,
+        message: "Error Occurred"
+    });
+
+    const [startDate, setStartDate] = useState<Date>(new Date());
+
+    const [endDate, setEndDate] = useState<Date>(new Date());
     
     const [text, setText] = useState<String>("");
 
     const [stockId, setStockId] = useState<String>("")
 
     const [openDropdown, setOpenDropdown] = useState<Boolean>(false);
+    
+    const [data, setData] = useState<Array<StockID>>([]);
 
-    const selectionRange = {
-        startDate: new Date(),
-        endDate: new Date(),
-        key: 'selection',
-    }
-    
-    const search_data = [
-        {"name": "TCS", "symbol": "TCS"},
-        {"name": "Infosys", "symbol": "INFY"},
-        {"name": "Reliance", "symbol": "RELIANCE"},
-        {"name": "HDFC Bank", "symbol": "HDFCBANK"},
-        {"name": "HDFC", "symbol": "HDFC"},
-        {"name": "ICICI Bank", "symbol": "ICICIBANK"},
-        {"name": "Bajaj Finance", "symbol": "BAJFINANCE"},
-        {"name": "Bajaj Auto", "symbol": "BAJAJ-AUTO"},
-        {"name": "Axis Bank", "symbol": "AXISBANK"},
-        {"name": "SBI", "symbol": "SBIN"},
-        {"name": "Hindustan Unilever", "symbol": "HINDUNILVR"},
-        {"name": "Maruti Suzuki", "symbol": "MARUTI"},
-        {"name": "Asian Paints", "symbol": "ASIANPAINT"},
-    ]
-    
-    const [data, setData] = useState(search_data);
+    useEffect(() => {
+        setIsLoading(true);
+        StockDataService.getAllIds()
+            .then(response => {
+                console.log(response.data);
+                setData(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+                setError({
+                    isError: true,
+                    message: e.message
+                })
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
 
     const handleSubmit = () => {
-        console.log(text);
+        
     }
 
     return (
+
+        isLoading 
+        ? 
+        <div className="flex justify-center items-center h-screen">
+            <Audio
+                height="80"
+                width="80"
+                color="green"
+                ariaLabel="loading"
+            />
+        </div>
+        : 
+        (
+        error.isError ? 
+        <div className="flex justify-center items-center h-screen">
+            <div className="text-2xl font-bold">
+                Sorry, Please try later. Facing error : {error.message}
+            </div>
+        </div>
+        :
         <div className="container mx-auto" >
             <div className="flex flex-row p-6 gap-10">
                 <div className="w-72 h-80 font-medium grow" >
@@ -58,25 +87,25 @@ export const StockGraph = () => {
                         <div className="bg-white hover:bg-white hover:text-blue-500 flex items-center px-2 sticky top-0">
                             <AiOutlineSearch className="ml-2" />
                             <input type="text" 
-                                className="w-full p-2 bg-blue-100 hover:bg-white hover:text-blue-500 outline-none" 
+                                className="w-full p-2 bg-white hover:bg-white hover:text-blue-500 outline-none" 
                                 placeholder="Search" 
                                 onChange={(e) => setText(e.target.value)} 
                             />
                         </div>
                         {
                             data.map((item, index) => (
-                                <li key={item.name + index} className={`p-2 text-sm 
-                                    ${item.name.toLowerCase().includes(text.toLowerCase()) ? "block" : "hidden"}
+                                <li key={item.id + index} className={`p-2 text-sm 
+                                    ${item.id.toLowerCase().includes(text.toLowerCase()) ? "block" : "hidden"}
                                     hover:bg-white 
                                     rounded-md
                                     hover:text-blue-500`}
                                     onClick={() => {
-                                        const new_stock_id = item.name;
+                                        const new_stock_id = item.id;
                                         setStockId(new_stock_id);
                                         setOpenDropdown(false);
                                     }}
                                     >
-                                    {item.name}
+                                    {item.id}
                                 </li>
                             ))
                         }
@@ -84,7 +113,7 @@ export const StockGraph = () => {
                 </div>
                 <div className="grow w-90 h-80 font-medium">
                     {/* Date Range } */}
-                    <CustomDateRangePicker />
+                    <CustomDateRangePicker setStartDate={setStartDate} setEndDate={setEndDate} />
                 </div>
                 <div>
                     {/* Search button */}
@@ -98,5 +127,5 @@ export const StockGraph = () => {
                 {text}
             </div>
         </div>
-    );
+                    ));
 }
