@@ -17,7 +17,7 @@ export const StockGraph = () => {
         startDate: new Date(),
         endDate: new Date(),
         key: 'selection',
-      }
+    }
     
     const search_data = [
         {"name": "TCS", "symbol": "TCS"},
