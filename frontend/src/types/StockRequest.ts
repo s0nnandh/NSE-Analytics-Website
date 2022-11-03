@@ -1,5 +1,5 @@
 export interface StockRequest { 
     id : string,
-    start_date : Date,
-    end_date : Date | null,
+    start_date : string,
+    end_date : string
 }

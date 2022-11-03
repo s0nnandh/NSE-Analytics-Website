@@ -23,7 +23,7 @@ def test_read_main():
     assert response.json() == {"msg": "Hello World"}
 
 def test_read_about():
-    response = client.get("/api/about/AXISBANK")
+    response = client.get("/api/stock/about/AXISBANK")
     assert response.status_code == 200
     assert response.json()[0] == AXIS_BANK_DATA
     assert len(response.json()) == AXIS_BANK_LENGTH
@@ -40,7 +40,14 @@ def test_read_price():
     assert response.json()[0] == AXIS_BANK_DATA
     assert len(response.json()) == 1
 
+# test for get_stock_between_dates
+def test_read_stock_between_dates():
+    response = client.post("/api/stock/AXISBANK/2022-10-31/2022-11-01")
+    assert response.status_code == 200
+    assert response.json()[0] == AXIS_BANK_DATA
+    assert len(response.json()) == 1
+
 def test_read_ids():
-    response = client.get("/api/ids")
+    response = client.get("/api/stock/ids")
     assert response.status_code == 200
     assert len(response.json()) == UNIQUE_IDS

@@ -4,6 +4,7 @@ from schemas import Stock, StockName, PriceRequest
 from database import Base, engine, SessionLocal
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime
 
 #add cors middleware
 from fastapi.middleware.cors import CORSMiddleware
@@ -37,7 +38,7 @@ def get_db():
 def get_root():
     return {"msg": "Hello World"}
 
-@app.get("/api/about/{id}", status_code=status.HTTP_200_OK, response_model=List[Stock])
+@app.get("/api/stock/about/{id}", status_code=status.HTTP_200_OK, response_model=List[Stock])
 def get_about(id : str, db : Session = Depends(get_db)):
     # query first element whose id is AXISBANK
     data = db.query(NSE).filter(NSE.id == id).all()
@@ -50,13 +51,25 @@ def get_match(prefix : str, db : Session = Depends(get_db)):
     return data
 
 @app.post("/api/price", response_model=List[Stock])
-def get_between_dates(request : PriceRequest, db : Session = Depends(get_db)):
-    # query all elements whose id is request.id and date is between request.start_date and request.end_date
-    data = db.query(NSE).filter(NSE.id == request.id).filter(NSE.date.between(request.start_date, request.end_date)).all()
+def get_stock_between_dates(request : PriceRequest, db : Session = Depends(get_db)):
+    # convert string to date
+    print(request.start_date)
+    print(request)
+    start_date = datetime.strptime(request.start_date, "%Y-%m-%d").date()
+    end_date = datetime.strptime(request.end_date, "%Y-%m-%d").date()
+    data = db.query(NSE).filter(NSE.id == request.id).filter(NSE.date.between(start_date, end_date)).order_by(NSE.date).all()
+    return data
+
+@app.get("/api/stock/{id}/{start_date}/{end_date}", status_code=status.HTTP_200_OK, response_model=List[Stock])
+def get_stock(id : str, start_date : str, end_date : str, db : Session = Depends(get_db)):
+    # convert string to date
+    start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+    end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+    data = db.query(NSE).filter(NSE.id == id).filter(NSE.date.between(start_date, end_date)).order_by(NSE.date).all()
     return data
 
 # api for getting all the unique ids
-@app.get("/api/ids", status_code=status.HTTP_200_OK, response_model=List[StockName])
+@app.get("/api/stock/ids", status_code=status.HTTP_200_OK, response_model=List[StockName])
 def get_ids(db : Session = Depends(get_db)):
     # query unique ids
     data = db.query(NSE.id).distinct().all()

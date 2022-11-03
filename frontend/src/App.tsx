@@ -1,5 +1,3 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Nav } from './components/Nav';
@@ -9,7 +7,7 @@ import { StockDetail } from './components/StockDetail';
 function App() {
   return (
     // add navbar here
-    <div className="bg-indigo-200 bg-cover bg-hero w-full h-screen">
+    <div className="bg-indigo-200 bg-cover bg-hero1 w-full h-screen">
     <Router>
       <Nav />
       <Routes>

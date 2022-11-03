@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 class Stock(BaseModel):
     id : str
@@ -11,7 +11,7 @@ class Stock(BaseModel):
     last : float
     date : datetime.date
 
-    class Config:
+    class Config():
         orm_mode = True
 
 class StockName(BaseModel):
@@ -22,5 +22,5 @@ class StockName(BaseModel):
 
 class PriceRequest(BaseModel):
     id : str
-    start_date : datetime.date
-    end_date : Optional[datetime.date] = datetime.date.today()
+    start_date : str
+    end_date : str
