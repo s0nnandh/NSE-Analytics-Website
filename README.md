@@ -12,6 +12,8 @@ Command : _npm i_
 
 Python^3.8.10
 
+pip 21.1.2
+
 ### To install all dependencies
 
 Command : _pip install -r requirements. txt_ 
