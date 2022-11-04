@@ -37,21 +37,10 @@ def get_db():
 def get_root():
     return {"msg": "Hello World"}
 
-@app.get("/api/stock/about/{id}", status_code=status.HTTP_200_OK, response_model=List[Stock])
-def get_about(id : str, db : Session = Depends(get_db)):
-    data = db.query(NSE).filter(NSE.id == id).all()
-    return data
-
 # get stock data on specific date
 @app.get("/api/stock/{id}/{date}", status_code=status.HTTP_200_OK, response_model=List[Stock])
 def get_stock(id : str, date : str, db : Session = Depends(get_db)):
     data = db.query(NSE).filter(NSE.id == id, NSE.date == date).all()
-    return data
-
-@app.get("/api/match/{prefix}", status_code=status.HTTP_200_OK, response_model=List[StockName])
-def get_match(prefix : str, db : Session = Depends(get_db)):
-    # query unique ids whose id starts with prefix
-    data = db.query(NSE.id).filter(NSE.id.startswith(prefix)).distinct().all()
     return data
 
 @app.get("/api/stock/{id}/{start_date}/{end_date}", status_code=status.HTTP_200_OK, response_model=List[Stock])

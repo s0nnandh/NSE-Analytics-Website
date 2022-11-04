@@ -28,24 +28,25 @@ export const CustomDatePicker = (props : CustomDateRangePickerProps) => {
     props.setSingleDate(date)
     props.setSelectSingleDate(true)
   }
-
+  
   return (
 
       <div>
       <div onClick={() => setOpen(!open)} 
-            className="bg-white w-full p-2 flex transform transition duration-500 hover:scale-110 items-center justify-between rounded-md">
+            className="bg-white w-full font-inter p-2 flex transform transition duration-500 hover:scale-110 items-center justify-between rounded-md">
             {    
               selected ? calendar
               : "Select Date"
             }
             <BiChevronDown className="ml-2" />
         </div>
-        <div className="bg-white w-full transform mt-2 transition duration-500 hover:scale-110 display:block calendarWrap flex items-center justify-between rounded-md">
+        <div className="bg-white font-inter w-full transform mt-2 transition duration-500 hover:scale-110 display:block calendarWrap flex items-center justify-between rounded-md">
         {open && 
           <Calendar
             date={ date }
             onChange = { handleSelect }
             disabledDay={(date) => date >= new Date()}
+            rangeColors={['#3f51b5']}
           />
         }
         </div>

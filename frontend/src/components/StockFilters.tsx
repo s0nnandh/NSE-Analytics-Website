@@ -72,7 +72,7 @@ export const StockFilters = (props : StockFilterProps) => {
     return (
         isLoading 
         ? 
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-screen test-id=loader ">
             <Audio
                 height="80"
                 width="80"
@@ -84,25 +84,25 @@ export const StockFilters = (props : StockFilterProps) => {
         (
         error.isError ? 
         <div className="flex justify-center items-center h-screen">
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-inter">
                 Sorry, Please try later. Facing error : {error.message}
             </div>
         </div>
         :
         <div className="flex flex-col justify-end">
                             <div className="w-72 h-80 font-medium">
-                                <div onClick={() => setOpenDropdown(!openDropdown)}
-                                    className="bg-white transform transition duration-500 hover:scale-110 w-full p-2 flex items-center justify-between rounded-md">
+                                <div id="id" onClick={() => setOpenDropdown(!openDropdown)}
+                                    className="bg-white transform font-inter transition duration-500 hover:scale-110 w-full p-2 flex items-center justify-between rounded-md">
                                     {stockId == ""
                                         ? "Select Stock"
                                         : stockId.substring(0, Math.min(20, stockId.length)) + (stockId.length > 20 ? "..." : "")}
                                     <BiChevronDown className="ml-2" />
                                 </div>
                                 <ul className={`bg-white overflow-y-auto display:block ${openDropdown ? "max-h-60" : "max-h-0"} rounded-md mt-2`}>
-                                    <div className="bg-white hover:bg-white transform transition duration-500 hover:scale-110 hover:text-blue-500 flex items-center px-2 sticky top-0">
+                                    <div className="bg-white hover:bg-white transform transition duration-500 hover:scale-110 hover:text-indigo-500 flex items-center px-2 sticky top-0">
                                         <AiOutlineSearch className="ml-2" />
                                         <input type="text"
-                                            className="w-full p-2 bg-white hover:bg-white hover:text-blue-500 outline-none"
+                                            className="w-full p-2 bg-white hover:bg-white hover:text-indigo-500 outline-none font-inter"
                                             placeholder="Search"
                                             onChange={(e) => setText(e.target.value)} />
                                     </div>
@@ -111,7 +111,8 @@ export const StockFilters = (props : StockFilterProps) => {
                                             ${item.id.toLowerCase().includes(text.toLowerCase()) ? "block" : "hidden"}
                                             hover:bg-white 
                                             rounded-md
-                                            hover:text-blue-500`}
+                                            font-inter
+                                            hover:text-indigo-500`}
                                                     onClick={() => {
                                                         const new_stock_id = item.id;
                                                         setStockId(new_stock_id);
@@ -132,15 +133,17 @@ export const StockFilters = (props : StockFilterProps) => {
                             </div>
                             <div className="pt-32 w-72 h-80 font-medium content-center display:block">
                                 {/* Search button */}
-                                <button disabled={stockId.length === 0 || !(selectDate || selectSingleDate)} onClick={
+                                <button role={"button"} id="submit-button" disabled={stockId.length === 0 || !(selectDate || selectSingleDate)} onClick={
                                     () => {
                                         const start_date = props.onlyDatePicker ? formatDate(singleDate) : formatDate(startDate);
                                         const end_date = props.onlyDatePicker ? formatDate(singleDate) : formatDate(endDate);
                                         console.log(start_date, end_date);
                                         props.handleSubmit(stockId, start_date, end_date); 
+                                        setSelectDate(false);
+                                        setSelectSingleDate(false);
                                     }
                                 }
-                                    className={`${stockId.length === 0 ? "bg-slate-400" : "bg-blue-500"} transform transition duration-500 hover:scale-110 ml-28 text-white p-2 rounded-md`}>
+                                    className={`${stockId.length === 0 ? "bg-slate-400" : "bg-indigo-500"} transform transition duration-500 hover:scale-110 ml-28 text-white p-2 rounded-md`}>
                                     Search
                                 </button>
                             </div>

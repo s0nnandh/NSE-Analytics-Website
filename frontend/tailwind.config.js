@@ -10,6 +10,12 @@ module.exports = {
             'hero1': "url('/src/assets/hero1.jpg')"
           }
       },
+      fontFamily: {
+        inter: "Inter",
+        workSans: "Work Sans",
+        openSans: "Open Sans",
+        Montserrat: "Montserrat",
+      }
     },
     plugins: [],
   }

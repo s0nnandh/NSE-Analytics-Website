@@ -32,16 +32,17 @@ export const CustomDateRangePicker = (props : CustomDateRangePickerProps) => {
     <div className="flex flex-col w-full outline-none rounded-md">
 
         <div onClick={() => setOpen(!open)} 
-            className="bg-white w-full p-2 flex transform transition duration-500 hover:scale-110 items-center justify-between rounded-md">
+            className="bg-white w-full p-2 flex transform transition duration-500 hover:scale-110 font-inter items-center justify-between rounded-md">
             {    
               selected ? `${format(range[0].startDate, "MM/dd/yyyy")} to ${format(range[0].endDate, "MM/dd/yyyy")}`
               : "Select Date Range"
             }
             <BiChevronDown className="ml-2" />
         </div>
-        <div className="bg-white w-full transform mt-2 transition duration-500 hover:scale-110 display:block calendarWrap flex items-center justify-between rounded-md">
+        <div className="bg-white w-full font-inter transform mt-2 transition duration-500 hover:scale-110 display:block calendarWrap flex items-center justify-between rounded-md">
         {open && 
            <DateRangePicker
+           className='indigo-500'
             scroll={{ enabled: false,
                       calendarWidth: 10,
                       calendarHeight: 10,
@@ -67,6 +68,7 @@ export const CustomDateRangePicker = (props : CustomDateRangePickerProps) => {
             direction="vertical"
             staticRanges={[]}
             inputRanges={[]}
+            rangeColors={['#3f51b5', '#3ecf8e', '#fed14c']}
           />
         }
       </div>

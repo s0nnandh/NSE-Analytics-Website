@@ -1,4 +1,4 @@
-import './App.css';
+ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Nav } from './components/Nav';
 import { StockGraph } from './components/StockGraph';
@@ -7,7 +7,7 @@ import { StockDetail } from './components/StockDetail';
 function App() {
   return (
     // add navbar here
-    <div className="bg-indigo-200 bg-cover bg-hero1 w-full h-screen">
+    <div className="bg-indigo-200 bg-cover w-full h-screen">
     <Router>
       <Nav />
       <Routes>

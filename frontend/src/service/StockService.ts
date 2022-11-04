@@ -1,4 +1,3 @@
-import { Stream } from "stream";
 import { SingleStockGraphComponentProps } from "../components/SingleStockGraphComponent";
 import http from "../http-common";
 import { Stock } from "../types/Stock";

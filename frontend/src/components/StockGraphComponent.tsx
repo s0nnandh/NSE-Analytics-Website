@@ -8,7 +8,8 @@ import { LineChart,
          CartesianGrid,
          XAxis, 
          Tooltip, 
-         Legend 
+         Legend, 
+         Label
 } from "recharts";
 import { Audio } from 'react-loader-spinner'
 
@@ -46,6 +47,15 @@ export const StockGraphComponent = (request : StockRequest) => {
         }
     }, [request]);
 
+    const CustomLabel = () => {
+         return (
+         <div>   
+            N / A
+          </div>
+        )
+      }
+    
+
     return (
         loading
         ?
@@ -61,32 +71,34 @@ export const StockGraphComponent = (request : StockRequest) => {
         error.isError
         ?
         <div className="flex justify-center items-center h-screen">
-            <h1 className="text-2xl font-bold text-red-500">{error.message}</h1>
+            <h1 className="text-2xl font-inter text-red-500">{error.message}</h1>
         </div>
         :
         request && 
         <div className="container mx-auto flex flex-row justify-center items-center">
-            <div className="flex flex-col">
-                {/*check box */}
+            {/* <div className="flex flex-col">
                 <div className="flex items-center mb-4">
                     <input onClick={() => setOpen} id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
                     <label htmlFor="default-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Open</label>
                 </div>
-            </div>
-            <div className="flex justify-center items-center h-80">
-                <LineChart width={600} height={600} data={data}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            </div> */}
+            {data.length ==0 ? <div className="flex w-96"><h1 className="text-2xl grow font-inter text-red-500">No Data Found on Given Range of Dates. Please Select other Dates</h1></div> :
+            <div className="flex justify-center items-center h-80 font-inter">
+                <LineChart width={1000} height={700} data={data}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 25 }}>
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="open" stroke="#8884d8" />
-                    <Line type="monotone" dataKey="high" stroke="#82ca9d" />
-                    <Line type="monotone" dataKey="low" stroke="#f44236" />
-                    <Line type="monotone" dataKey="close" />
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="date" />
+                    <Line type="monotone" dataKey="open" stroke="#8884d8" strokeWidth={1}/>
+                    <Line type="monotone" dataKey="high" stroke="#82ca9d" strokeWidth={1}/>
+                    <Line type="monotone" dataKey="low" stroke="#f44236" strokeWidth={1}/>
+                    <Line type="monotone" dataKey="close" strokeWidth={1}/>
+                    <CartesianGrid strokeDasharray="3 3" strokeWidth={2}/>
+                    <XAxis dataKey="date">
+                    </XAxis>
                     <YAxis />
                 </LineChart>                    
             </div>
+    }
         </div>
     );
 
