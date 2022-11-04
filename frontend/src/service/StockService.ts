@@ -1,4 +1,5 @@
 import { Stream } from "stream";
+import { SingleStockGraphComponentProps } from "../components/SingleStockGraphComponent";
 import http from "../http-common";
 import { Stock } from "../types/Stock";
 import { StockID } from "../types/StockID";
@@ -21,6 +22,10 @@ class StockDataService {
     
     getStockBetweenDates(data : StockRequest) {
         return http.get<Array<Stock>>(`/stock/${data.id}/${data.start_date}/${data.end_date}`);
+    }
+
+    getStockForDate(data : SingleStockGraphComponentProps) {
+        return http.get<Array<Stock>>(`/stock/${data.id}/${data.date}`);
     }
 
 }

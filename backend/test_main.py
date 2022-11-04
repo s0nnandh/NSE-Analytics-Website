@@ -34,15 +34,8 @@ def test_read_match():
     assert response.json()[0] == {"id": "AXISBANK"}
     assert len(response.json()) == 10
 
-def test_read_price():
-    response = client.post("/api/price", json={"id": "AXISBANK", "start_date": "2022-10-31", "end_date": "2022-11-01"})
-    assert response.status_code == 200
-    assert response.json()[0] == AXIS_BANK_DATA
-    assert len(response.json()) == 1
-
-# test for get_stock_between_dates
 def test_read_stock_between_dates():
-    response = client.post("/api/stock/AXISBANK/2022-10-31/2022-11-01")
+    response = client.get("/api/stock/AXISBANK/2022-10-31/2022-11-01")
     assert response.status_code == 200
     assert response.json()[0] == AXIS_BANK_DATA
     assert len(response.json()) == 1
@@ -51,3 +44,9 @@ def test_read_ids():
     response = client.get("/api/stock/ids")
     assert response.status_code == 200
     assert len(response.json()) == UNIQUE_IDS
+
+def test_read_stock():
+    response = client.get("/api/stock/AXISBANK/2022-10-31")
+    assert response.status_code == 200
+    assert response.json()[0] == AXIS_BANK_DATA
+    assert len(response.json()) == 1

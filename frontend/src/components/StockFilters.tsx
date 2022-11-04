@@ -5,9 +5,11 @@ import { Audio } from 'react-loader-spinner';
 import { CustomDateRangePicker } from "./CustomDateRangePicker";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
+import { CustomDatePicker } from "./CustomDatePicker";
 
 interface StockFilterProps {
     handleSubmit : (id : string, start_date : string, end_date : string) => void;
+    onlyDatePicker? : boolean;
 }
 
 export const StockFilters = (props : StockFilterProps) => {
@@ -32,6 +34,10 @@ export const StockFilters = (props : StockFilterProps) => {
     const [openDropdown, setOpenDropdown] = useState<boolean>(false);
     
     const [data, setData] = useState<Array<StockID>>([]);
+
+    const [selectSingleDate, setSelectSingleDate] = useState<boolean>(false);
+
+    const [singleDate, setSingleDate] = useState<Date>(new Date());
     
     useEffect(() => {
         setIsLoading(true);
@@ -118,15 +124,18 @@ export const StockFilters = (props : StockFilterProps) => {
                                 </ul>
                             </div>
                             <div className="w-72 h-80 font-medium display:block">
-                                {/* Date Range } */}
-                                <CustomDateRangePicker setStartDate={setStartDate} setEndDate={setEndDate} setSelectDate={setSelectDate} />
+                                                    
+                                {
+                                props.onlyDatePicker ? <CustomDatePicker setSelectSingleDate={setSelectSingleDate} setSingleDate={setSingleDate}/>
+                                : <CustomDateRangePicker setStartDate={setStartDate} setEndDate={setEndDate} setSelectDate={setSelectDate}  />
+                                }
                             </div>
                             <div className="pt-32 w-72 h-80 font-medium content-center display:block">
                                 {/* Search button */}
-                                <button disabled={stockId.length === 0 || !selectDate} onClick={
+                                <button disabled={stockId.length === 0 || !(selectDate || selectSingleDate)} onClick={
                                     () => {
-                                        const start_date = formatDate(startDate);
-                                        const end_date = formatDate(endDate);
+                                        const start_date = props.onlyDatePicker ? formatDate(singleDate) : formatDate(startDate);
+                                        const end_date = props.onlyDatePicker ? formatDate(singleDate) : formatDate(endDate);
                                         console.log(start_date, end_date);
                                         props.handleSubmit(stockId, start_date, end_date); 
                                     }

@@ -6,12 +6,12 @@ import format from 'date-fns/format'
 import 'react-date-range-ts/dist/styles.css'
 import 'react-date-range-ts/dist/theme/default.css'
 import { BiChevronDown } from 'react-icons/bi'
+import { CustomDatePicker } from './CustomDatePicker'
 
 interface CustomDateRangePickerProps {
     setStartDate: (date: Date) => void
     setEndDate: (date: Date) => void
     setSelectDate: (selectDate: boolean) => void
-    onlyCalendar?: boolean
 }
 
 export const CustomDateRangePicker = (props : CustomDateRangePickerProps) => {
@@ -33,7 +33,7 @@ export const CustomDateRangePicker = (props : CustomDateRangePickerProps) => {
 
         <div onClick={() => setOpen(!open)} 
             className="bg-white w-full p-2 flex transform transition duration-500 hover:scale-110 items-center justify-between rounded-md">
-            {   
+            {    
               selected ? `${format(range[0].startDate, "MM/dd/yyyy")} to ${format(range[0].endDate, "MM/dd/yyyy")}`
               : "Select Date Range"
             }
@@ -41,7 +41,7 @@ export const CustomDateRangePicker = (props : CustomDateRangePickerProps) => {
         </div>
         <div className="bg-white w-full transform mt-2 transition duration-500 hover:scale-110 display:block calendarWrap flex items-center justify-between rounded-md">
         {open && 
-          <DateRangePicker
+           <DateRangePicker
             scroll={{ enabled: false,
                       calendarWidth: 10,
                       calendarHeight: 10,

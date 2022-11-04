@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-#add cors middleware
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
@@ -40,8 +39,13 @@ def get_root():
 
 @app.get("/api/stock/about/{id}", status_code=status.HTTP_200_OK, response_model=List[Stock])
 def get_about(id : str, db : Session = Depends(get_db)):
-    # query first element whose id is AXISBANK
     data = db.query(NSE).filter(NSE.id == id).all()
+    return data
+
+# get stock data on specific date
+@app.get("/api/stock/{id}/{date}", status_code=status.HTTP_200_OK, response_model=List[Stock])
+def get_stock(id : str, date : str, db : Session = Depends(get_db)):
+    data = db.query(NSE).filter(NSE.id == id, NSE.date == date).all()
     return data
 
 @app.get("/api/match/{prefix}", status_code=status.HTTP_200_OK, response_model=List[StockName])
@@ -50,18 +54,8 @@ def get_match(prefix : str, db : Session = Depends(get_db)):
     data = db.query(NSE.id).filter(NSE.id.startswith(prefix)).distinct().all()
     return data
 
-@app.post("/api/price", response_model=List[Stock])
-def get_stock_between_dates(request : PriceRequest, db : Session = Depends(get_db)):
-    # convert string to date
-    print(request.start_date)
-    print(request)
-    start_date = datetime.strptime(request.start_date, "%Y-%m-%d").date()
-    end_date = datetime.strptime(request.end_date, "%Y-%m-%d").date()
-    data = db.query(NSE).filter(NSE.id == request.id).filter(NSE.date.between(start_date, end_date)).order_by(NSE.date).all()
-    return data
-
 @app.get("/api/stock/{id}/{start_date}/{end_date}", status_code=status.HTTP_200_OK, response_model=List[Stock])
-def get_stock(id : str, start_date : str, end_date : str, db : Session = Depends(get_db)):
+def get_stock_between_dates(id : str, start_date : str, end_date : str, db : Session = Depends(get_db)):
     # convert string to date
     start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
     end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
